@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farm GPS Data Collection Training</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(to bottom right, #f0fdf4, #dbeafe);
+        }
+        #root {
+            width: 100%;
+            min-height: 100vh;
+            padding: 0.5rem;
+        }
+        @media (min-width: 768px) {
+            #root {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        const FarmGPSTraining = () => {
+            const [step, setStep] = useState(0);
+            const [isAnimating, setIsAnimating] = useState(false);
+            const [corners, setCorners] = useState([]);
+            const [internPosition, setInternPosition] = useState({ x: 100, y: 100 });
+            const [walkingPath, setWalkingPath] = useState([]);
+            const [language, setLanguage] = useState('english');
+
+            const farmCorners = [
+                { x: 100, y: 100, label: 'Corner 1' },
+                { x: 300, y: 80, label: 'Corner 2' },
+                { x: 320, y: 280, label: 'Corner 3' },
+                { x: 90, y: 300, label: 'Corner 4' }
+            ];
+
+            const translations = {
+                english: {
+                    title: "Farm GPS Data Collection Training",
+                    subtitle: "Learn how to record farm boundaries using GPS coordinates",
+                    guide: "Step-by-Step Guide",
+                    start: "Start Demo",
+                    reset: "Reset",
+                    running: "Running...",
+                    recorded: "Farm Boundary Recorded!",
+                    area: "Area",
+                    points: "GPS points captured",
+                    tips: "Important Tips:",
+                    tip1: "Walk along the actual farm boundary",
+                    tip2: "Ensure GPS signal is strong",
+                    tip3: "Record at least 4 corner points",
+                    tip4: "Close the boundary by returning to start",
+                    steps: [
+                        "Start at first corner of the farm plot",
+                        "Walk to the first corner and tap 'Record Point'",
+                        "Continue walking along the boundary to the next corner",
+                        "Record each corner point as you reach it",
+                        "Walk back to complete the boundary",
+                        "Farm area calculated! Data saved."
+                    ]
+                },
+                hausa: {
+                    title: "Horar da Tattara Bayanan GPS na Gona",
+                    subtitle: "Koyi yadda ake yin rikodin iyakokin gona ta amfani da GPS",
+                    guide: "Jagora Mataki-Mataki",
+                    start: "Fara Demo",
+                    reset: "Sake Saitawa",
+                    running: "Ana Aiki...",
+                    recorded: "An Rubuta Iyakar Gona!",
+                    area: "Girman Fili",
+                    points: "An kama wurare na GPS",
+                    tips: "Muhimman Shawarwari:",
+                    tip1: "Yi tafiya a gaɓoɓin gonar da gaske",
+                    tip2: "Tabbatar siginar GPS tana da ƙarfi",
+                    tip3: "Yi rikodin aƙalla wurare 4",
+                    tip4: "Rufe iyakar ta hanyar komawa wurin farawa",
+                    steps: [
+                        "Fara a kusurwar farko na filin gona",
+                        "Yi tafiya zuwa kusurwar farko kuma danna 'Rubuta Wurin'",
+                        "Ci gaba da tafiya tare da iyakar zuwa kusurwa ta gaba",
+                        "Yi rikodin kowane kusurwa yayin da kuka isa",
+                        "Koma don kammala iyakar",
+                        "An ƙididdige girman gona! An adana bayanan."
+                    ]
+                },
+                yoruba: {
+                    title: "Ìkẹ́kọ̀ọ́ Gbígbà Ìròyìn GPS Oko",
+                    subtitle: "Kọ́ bí a ṣe ń ṣe ìfọwọ́sí ààlà oko nípa lílo GPS",
+                    guide: "Ìtọ́sọ́nà Ìgbésẹ̀-Ìgbésẹ̀",
+                    start: "Bẹ̀rẹ̀ Demo",
+                    reset: "Tún Bẹ̀rẹ̀",
+                    running: "Ń Ṣiṣẹ́...",
+                    recorded: "A ti Ṣe Ìfọwọ́sí Ààlà Oko!",
+                    area: "Ìwọ̀n",
+                    points: "A ti gba àwọn àyè GPS",
+                    tips: "Àwọn Ìmọ̀ràn Pàtàkì:",
+                    tip1: "Rìn ní ẹ̀gbẹ́ ààlà oko gangan",
+                    tip2: "Rí i pé àmì GPS lágbára",
+                    tip3: "Ṣe ìfọwọ́sí ó kéré jù igun 4",
+                    tip4: "Parí ààlà náà nípa pàdà sí ibẹ̀rẹ̀",
+                    steps: [
+                        "Bẹ̀rẹ̀ ní igun àkọ́kọ́ ti pápá oko",
+                        "Rìn lọ sí igun àkọ́kọ́ kí o sì tẹ 'Ṣe Ìfọwọ́sí Ipò'",
+                        "Tẹ̀síwájú láti rìn ní ẹ̀gbẹ́ ààlà lọ sí igun tó kàn",
+                        "Ṣe ìfọwọ́sí igun kọ̀ọ̀kan bí o ti dé ibẹ̀",
+                        "Rìn padà láti parí ààlà náà",
+                        "A ti ṣe ìṣirò ìwọ̀n oko! A ti pa dátà mọ́."
+                    ]
+                },
+                nupe: {
+                    title: "Ékún Gban GPS Efu Egwa",
+                    subtitle: "Gan kpé èkó èyin efu ndá lazun GPS",
+                    guide: "Ndá Ékún Gban-Gban",
+                    start: "Ba Demo",
+                    reset: "Lazun Kété",
+                    running: "Ẹ̀ dùn gban...",
+                    recorded: "Efu Egwa Èyin E Gban Bo!",
+                    area: "Kpatako",
+                    points: "GPS èyin e gban",
+                    tips: "Ẹ̀kó Kushe:",
+                    tip1: "Zhì èyin efu egwa gangan",
+                    tip2: "Kpé GPS èmi zhìshín kò ò yí",
+                    tip3: "Gban kpátá èzhi 4 è kpé kùkù",
+                    tip4: "Lazun èyin nakàn ezhì eba kushe",
+                    steps: [
+                        "Ba è kpátá àkọ́kọ́ efu egwa gangan",
+                        "Zhì lá kpátá àkọ́kọ́ kò kún 'Gban Èzhi'",
+                        "Lazun zhì èyin efu egwa lá kpátá kaàn",
+                        "Gban kpátá kànkàn bí o dzó èzhi",
+                        "Lazun kpada è lazun èyin nakàn",
+                        "Efu egwa èyin kpatako e kpé bo! Ẹ̀kó e pa mọ."
+                    ]
+                },
+                igbo: {
+                    title: "Ọzụzụ Nchịkọta Ozi GPS Ugbo",
+                    subtitle: "Mụta otu esi edekọ ókè ugbo site na iji GPS",
+                    guide: "Nduzi Nzọụkwụ-Nzọụkwụ",
+                    start: "Malite Demo",
+                    reset: "Tọgharịa",
+                    running: "Na-arụ Ọrụ...",
+                    recorded: "Edekọla Ókè Ugbo!",
+                    area: "Nha",
+                    points: "Edekọla ebe GPS",
+                    tips: "Ndụmọdụ Dị Mkpa:",
+                    tip1: "Jee ije n'akụkụ ókè ugbo n'ezie",
+                    tip2: "Hụ na mgbaàmà GPS dị ike",
+                    tip3: "Dekọọ opekata mpe nkuku 4",
+                    tip4: "Mechie ókè site na ịlaghachi ebe mbụ",
+                    steps: [
+                        "Malite na nkuku mbụ nke ala ugbo",
+                        "Jee na nkuku mbụ ma pịa 'Dekọọ Ebe'",
+                        "Gaa n'ihu na-aga n'akụkụ ókè gaa na nkuku ọzọ",
+                        "Dekọọ nkuku ọ bụla mgbe ị rutere ebe ahụ",
+                        "Laghachi azụ iji mechie ókè ahụ",
+                        "Agbakọọla nha ugbo! Echekwala data."
+                    ]
+                },
+                fulfulde: {
+                    title: "Ekkitaare Lootal GPS Guurol",
+                    subtitle: "Jang hol no waawi mooftude keerol guurol huutorɗe GPS",
+                    guide: "Jaltagol Ceŋtol-Ceŋtol",
+                    start: "Fuɗɗito Demo",
+                    reset: "Wakkilto",
+                    running: "Ena huutoroo...",
+                    recorded: "Keerol Guurol Mooftiima!",
+                    area: "Keɓɓorgo",
+                    points: "Nokkuuji GPS njiɗtiiɗi",
+                    tips: "Kabaruuji Mawɗi:",
+                    tip1: "Yah e keerol guurol geɗal",
+                    tip2: "Hoolno GPS ina mari kuɗol",
+                    tip3: "Mooftu hay ko famɗi ceŋe 4",
+                    tip4: "Uddit keerol ɗoo so a ruttii ko fuɗɗiima",
+                    steps: [
+                        "Fuɗɗito e ceŋe gadano guurol",
+                        "Yah haa ceŋe gadane kañum 'Mooftu Nokkuure'",
+                        "Jokku yahde e keerol guurol haa ceŋe goɗngel",
+                        "Mooftu ceŋe kala so a jootii",
+                        "Rutto foɗɗitaade keerol ɗoo",
+                        "Keɓɓorgo guurol njiisnaa! Kabaruuji mooftiima."
+                    ]
+                }
+            };
+
+            useEffect(() => {
+                if (!isAnimating) return;
+
+                const timer = setTimeout(() => {
+                    if (step < farmCorners.length) {
+                        const target = farmCorners[step];
+                        const start = step === 0 ? { x: 50, y: 50 } : farmCorners[step - 1];
+                        
+                        const pathSteps = 20;
+                        let currentPathStep = 0;
+                        
+                        const walkInterval = setInterval(() => {
+                            if (currentPathStep <= pathSteps) {
+                                const progress = currentPathStep / pathSteps;
+                                const newX = start.x + (target.x - start.x) * progress;
+                                const newY = start.y + (target.y - start.y) * progress;
+                                setInternPosition({ x: newX, y: newY });
+                                setWalkingPath(prev => [...prev, { x: newX, y: newY }]);
+                                currentPathStep++;
+                            } else {
+                                clearInterval(walkInterval);
+                                setCorners(prev => [...prev, target]);
+                                setStep(prev => prev + 1);
+                            }
+                        }, 75);
+                        
+                        return () => clearInterval(walkInterval);
+                    } else if (step === farmCorners.length) {
+                        const start = farmCorners[farmCorners.length - 1];
+                        const target = farmCorners[0];
+                        
+                        const pathSteps = 20;
+                        let currentPathStep = 0;
+                        
+                        const walkInterval = setInterval(() => {
+                            if (currentPathStep <= pathSteps) {
+                                const progress = currentPathStep / pathSteps;
+                                const newX = start.x + (target.x - start.x) * progress;
+                                const newY = start.y + (target.y - start.y) * progress;
+                                setInternPosition({ x: newX, y: newY });
+                                setWalkingPath(prev => [...prev, { x: newX, y: newY }]);
+                                currentPathStep++;
+                            } else {
+                                clearInterval(walkInterval);
+                                setStep(prev => prev + 1);
+                            }
+                        }, 75);
+                        
+                        return () => clearInterval(walkInterval);
+                    } else {
+                        setIsAnimating(false);
+                    }
+                }, step === 0 ? 500 : 500);
+
+                return () => clearTimeout(timer);
+            }, [isAnimating, step]);
+
+            const startAnimation = () => {
+                setStep(0);
+                setCorners([]);
+                setWalkingPath([]);
+                setInternPosition({ x: 100, y: 100 });
+                setIsAnimating(true);
+            };
+
+            const resetAnimation = () => {
+                setIsAnimating(false);
+                setStep(0);
+                setCorners([]);
+                setWalkingPath([]);
+                setInternPosition({ x: 100, y: 100 });
+            };
+
+            const t = translations[language];
+
+            return (
+                <div className="w-full max-w-4xl mx-auto p-3 sm:p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-lg shadow-lg">
+                    <div className="text-center mb-4 sm:mb-6">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{t.title}</h2>
+                        <p className="text-sm sm:text-base text-gray-600">{t.subtitle}</p>
+                        
+                        <div className="flex justify-center gap-1 sm:gap-2 mt-3 sm:mt-4 flex-wrap">
+                            {Object.keys(translations).map(lang => (
+                                <button
+                                    key={lang}
+                                    onClick={() => setLanguage(lang)}
+                                    className={`px-2 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm rounded-lg font-medium transition-colors ${
+                                        language === lang
+                                            ? 'bg-blue-600 text-white'
+                                            : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                                    }`}
+                                >
+                                    {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+                        <div className="lg:col-span-2 bg-white rounded-lg p-3 sm:p-4 shadow">
+                            <div className="relative w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-green-100 to-green-200 rounded border-2 border-green-300 overflow-hidden">
+                                {/* SVG container with proper viewBox for scaling */}
+                                <svg className="absolute inset-0 w-full h-full" viewBox="0 0 400 350" preserveAspectRatio="xMidYMid meet">
+                                    {/* Walking Path (dotted line) */}
+                                    {walkingPath.length > 1 && (
+                                        <polyline
+                                            points={walkingPath.map(p => `${p.x},${p.y}`).join(' ')}
+                                            fill="none"
+                                            stroke="#3b82f6"
+                                            strokeWidth="2"
+                                            strokeDasharray="5,5"
+                                            opacity="0.6"
+                                        />
+                                    )}
+                                    
+                                    {/* Farm Plot Visual */}
+                                    {corners.length > 0 && (
+                                        <>
+                                            <polygon
+                                                points={corners.map(c => `${c.x},${c.y}`).join(' ')}
+                                                fill="rgba(34, 197, 94, 0.2)"
+                                                stroke="#22c55e"
+                                                strokeWidth="3"
+                                                strokeDasharray={step <= farmCorners.length ? "8,8" : "0"}
+                                            />
+                                            {corners.map((corner, i) => {
+                                                if (i < corners.length - 1 || step > farmCorners.length) {
+                                                    return (
+                                                        <line
+                                                            key={i}
+                                                            x1={corner.x}
+                                                            y1={corner.y}
+                                                            x2={corners[(i + 1) % corners.length]?.x || corner.x}
+                                                            y2={corners[(i + 1) % corners.length]?.y || corner.y}
+                                                            stroke={step > farmCorners.length ? "#16a34a" : "#22c55e"}
+                                                            strokeWidth={step > farmCorners.length ? "3" : "2"}
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </>
+                                    )}
+
+                                    {/* Recorded Corners */}
+                                    {corners.map((corner, index) => (
+                                        <g key={index}>
+                                            <path d={`M${corner.x} ${corner.y-15} L${corner.x-10} ${corner.y-5} L${corner.x-10} ${corner.y+10} L${corner.x+10} ${corner.y+10} L${corner.x+10} ${corner.y-5} Z`} 
+                                                  fill="#22c55e" stroke="#16a34a" strokeWidth="1"/>
+                                            <circle cx={corner.x} cy={corner.y} r="3" fill="#16a34a"/>
+                                            <text x={corner.x} y={corner.y+25} 
+                                                  textAnchor="middle" 
+                                                  className="text-xs font-semibold" 
+                                                  fill="#1f2937"
+                                                  style={{fontSize: '10px'}}>
+                                                {corner.label}
+                                            </text>
+                                        </g>
+                                    ))}
+
+                                    {/* Intern Walking */}
+                                    <g transform={`translate(${internPosition.x}, ${internPosition.y})`}>
+                                        <circle cx="0" cy="-10" r="4" fill="#2563eb"/>
+                                        <path d="M0 -5 L0 5" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+                                        <path d="M0 -3 L-4 1" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+                                        <path d="M0 -3 L4 0" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+                                        <path d="M0 5 L-2 12" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+                                        <path d="M0 5 L2 11" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round"/>
+                                        <text x="0" y="-18" 
+                                              textAnchor="middle" 
+                                              fill="white"
+                                              style={{fontSize: '10px', fontWeight: 'bold'}}>
+                                            <tspan x="0" dy="0">Intern</tspan>
+                                        </text>
+                                    </g>
+                                </svg>
+
+                                {step > farmCorners.length && (
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 p-4">
+                                        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-xl text-center max-w-xs">
+                                            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-green-500 mx-auto mb-2 sm:mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                                <polyline points="22 4 12 14.01 9 11.01" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            </svg>
+                                            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">{t.recorded}</h3>
+                                            <p className="text-sm sm:text-base text-gray-600">{t.area}: 0.47 hectares</p>
+                                            <p className="text-xs sm:text-sm text-gray-500 mt-1">4 {t.points}</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+
+                            <div className="flex gap-2 sm:gap-3 mt-3 sm:mt-4 justify-center flex-wrap">
+                                <button
+                                    onClick={startAnimation}
+                                    disabled={isAnimating}
+                                    className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                                >
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                                        <polygon points="5 3 19 12 5 21 5 3"/>
+                                    </svg>
+                                    {isAnimating ? t.running : t.start}
+                                </button>
+                                <button
+                                    onClick={resetAnimation}
+                                    className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                                >
+                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    {t.reset}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="bg-white rounded-lg p-3 sm:p-4 shadow">
+                            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                                <svg className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
+                                </svg>
+                                {t.guide}
+                            </h3>
+                            <div className="space-y-2 sm:space-y-3">
+                                {t.steps.map((instruction, index) => (
+                                    <div
+                                        key={index}
+                                        className={`p-2 sm:p-3 rounded-lg transition-all ${
+                                            step === index
+                                                ? 'bg-blue-100 border-2 border-blue-500 shadow-md'
+                                                : step > index
+                                                ? 'bg-green-50 border border-green-300'
+                                                : 'bg-gray-50 border border-gray-200'
+                                        }`}
+                                    >
+                                        <div className="flex items-start gap-2">
+                                            <span className={`flex-shrink-0 w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center text-xs font-bold ${
+                                                step === index
+                                                    ? 'bg-blue-500 text-white'
+                                                    : step > index
+                                                    ? 'bg-green-500 text-white'
+                                                    : 'bg-gray-300 text-gray-600'
+                                            }`}>
+                                                {index + 1}
+                                            </span>
+                                            <p className={`text-xs sm:text-sm ${
+                                                step === index ? 'font-semibold text-blue-900' : 'text-gray-700'
+                                            }`}>
+                                                {instruction}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-4 sm:mt-6 p-3 sm:p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                                <h4 className="font-semibold text-gray-800 mb-2 text-xs sm:text-sm">{t.tips}</h4>
+                                <ul className="text-xs text-gray-700 space-y-1">
+                                    <li>• {t.tip1}</li>
+                                    <li>• {t.tip2}</li>
+                                    <li>• {t.tip3}</li>
+                                    <li>• {t.tip4}</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<FarmGPSTraining />);
+    </script>
+</body>
+</html>
