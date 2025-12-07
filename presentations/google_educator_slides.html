@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Quest for the Champion's Badge</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .presentation {
+            width: 100%;
+            max-width: 1200px;
+            aspect-ratio: 16/9;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            padding: 60px;
+            position: relative;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-title {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 80px 60px;
+            text-align: center;
+            justify-content: center;
+        }
+
+        .slide-title h1 {
+            font-size: 3.5em;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 20px;
+        }
+
+        .slide-title p {
+            font-size: 1.5em;
+            color: #f0f0f0;
+        }
+
+        h2 {
+            font-size: 2.5em;
+            color: #667eea;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .content {
+            font-size: 1.3em;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .content li {
+            margin: 20px 0;
+            padding-left: 40px;
+            position: relative;
+        }
+
+        .content li:before {
+            content: "✨";
+            position: absolute;
+            left: 0;
+            font-size: 1.5em;
+        }
+
+        .badge {
+            font-size: 4em;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #ffd89b 0%, #19547b 100%);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .navigation {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.3);
+        }
+
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            color: #667eea;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .emoji-large {
+            font-size: 3em;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .steps {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin: 20px 0;
+        }
+
+        .steps h3 {
+            color: #764ba2;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .call-to-action {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 30px 0;
+            font-size: 1.4em;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation">
+        <!-- Slide 1: Title -->
+        <div class="slide active slide-title">
+            <h1>📖 The Quest for the Champion's Badge</h1>
+            <p>A Google Educator's Journey</p>
+            <p style="margin-top: 40px; font-size: 1.2em;">🎓 Cosmopolitan University Digital Transformation</p>
+        </div>
+
+        <!-- Slide 2: The Call -->
+        <div class="slide">
+            <h2>📣 Chapter 1: The Call to Adventure!</h2>
+            <div class="content">
+                <div class="badge">🏆</div>
+                <p style="text-align: center; font-size: 1.5em; margin-bottom: 30px;">
+                    A new digital age is dawning!
+                </p>
+                <p style="font-size: 1.3em; line-height: 1.8;">
+                    Your mission: Become a <span class="highlight">Google Certified Educator</span>
+                </p>
+                <p style="margin-top: 30px; font-size: 1.2em;">
+                    This isn't just a badge—it's about gaining new powers to create amazing lessons, 
+                    boost efficiency, and lead our university into the future.
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 3: Your Toolkit -->
+        <div class="slide">
+            <h2>🎒 Chapter 2: Gearing Up</h2>
+            <div class="content">
+                <p style="margin-bottom: 30px;">Every hero needs their gear:</p>
+                <ul>
+                    <li><strong>Your Magic Key:</strong> University Google Account</li>
+                    <li><strong>Your Window to the World:</strong> Computer & Internet</li>
+                    <li><strong>A Potion of Curiosity:</strong> Willingness to explore</li>
+                    <li><strong>A Bit of Time:</strong> Self-paced journey</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 4: Resources -->
+        <div class="slide">
+            <h2>🗺️ Chapter 3: The Map & Magic Spells</h2>
+            <div class="content">
+                <div class="steps">
+                    <h3>📚 Your Resources:</h3>
+                    <ul style="font-size: 1.1em;">
+                        <li><strong>Base Camp:</strong> Digital Transformation Hub (Google Classroom)</li>
+                        <li><strong>Ancient Guidebook:</strong> Google Fundamentals Training (Free!)</li>
+                        <li><strong>Seeing Stones:</strong> Video resources & tutorials</li>
+                    </ul>
+                </div>
+                <p style="margin-top: 20px; font-size: 1.1em;">
+                    🔗 Start your training: <strong>edu.google.com/learning-center</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 5: The Spells -->
+        <div class="slide">
+            <h2>✨ The Spells You'll Master</h2>
+            <div class="content">
+                <ul>
+                    <li><strong>The Spell of Creation:</strong> Craft magical Docs, Slides & Sheets</li>
+                    <li><strong>The Spell of Connection:</strong> Gmail & Chat mastery</li>
+                    <li><strong>The Spell of Organization:</strong> Tame your schedule with Calendar & Keep</li>
+                    <li><strong>The Spell of the Gathering:</strong> Build your own Google Classroom</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 6: Path to Victory -->
+        <div class="slide">
+            <h2>🎯 Chapter 4: Path to Victory</h2>
+            <div class="content">
+                <div class="steps">
+                    <h3>Your Action Plan:</h3>
+                    <ol style="list-style: decimal; padding-left: 40px; font-size: 1.1em; line-height: 2;">
+                        <li>Join the Digital Transformation Hub (Google Classroom)</li>
+                        <li>Start the Fundamentals Training course</li>
+                        <li><strong>Don't just read—PRACTICE!</strong> Try everything hands-on</li>
+                        <li>Ask questions in the Hub—we're a team!</li>
+                    </ol>
+                </div>
+                <p style="margin-top: 25px; text-align: center; font-size: 1.2em; color: #764ba2;">
+                    <strong>🔑 The secret to victory: Hands-on practice!</strong>
+                </p>
+            </div>
+        </div>
+
+        <!-- Slide 7: The Final Trial -->
+        <div class="slide">
+            <h2>⚔️ Chapter 5: The Final Trial</h2>
+            <div class="content">
+                <p style="font-size: 1.4em; margin-bottom: 30px;">
+                    The <span class="highlight">Certification Exam</span>
+                </p>
+                <div class="call-to-action">
+                    🎁 The University will pay your $10 exam fee!
+                </div>
+                <div class="steps">
+                    <h3>How to Claim Your Gift:</h3>
+                    <p style="font-size: 1.1em; line-height: 1.8;">
+                        Contact M. Mahmud at the Base Camp before registering, 
+                        and the university will cover your fee.
+                    </p>
+                    <p style="margin-top: 20px; font-size: 1.1em;">
+                        🔗 Register: <strong>edu.google.com/learning-center/certifications</strong>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Victory -->
+        <div class="slide slide-title">
+            <h1>🌟 Chapter 6: A New Beginning!</h1>
+            <div class="emoji-large">🎓✨🚀</div>
+            <p style="font-size: 1.4em; margin-top: 30px;">
+                Become one of Cosmopolitan University's first<br>
+                <span class="highlight" style="font-size: 1.2em;">Google Certified Educators</span>
+            </p>
+            <p style="font-size: 1.2em; margin-top: 40px;">
+                Together, we'll build an amazing digital future! 💪
+            </p>
+        </div>
+
+        <!-- Navigation -->
+        <div class="slide-counter">
+            <span id="current-slide">1</span> / <span id="total-slides">8</span>
+        </div>
+        <div class="navigation">
+            <button id="prev-btn" onclick="prevSlide()">← Previous</button>
+            <button id="next-btn" onclick="nextSlide()">Next →</button>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function nextSlide() {
+            if (currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
