@@ -373,15 +373,14 @@
                                 </svg>
 
                                 {step > farmCorners.length && (
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-20 p-4">
-                                        <div className="bg-white rounded-lg p-4 sm:p-6 shadow-xl text-center max-w-xs">
-                                            <svg className="w-12 h-12 sm:w-16 sm:h-16 text-green-500 mx-auto mb-2 sm:mb-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                                                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                                <polyline points="22 4 12 14.01 9 11.01" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                            </svg>
-                                            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-1 sm:mb-2">{t.recorded}</h3>
-                                            <p className="text-sm sm:text-base text-gray-600">{t.area}: 0.47 hectares</p>
-                                            <p className="text-xs sm:text-sm text-gray-500 mt-1">4 {t.points}</p>
+                                    <div className="absolute top-4 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-4 py-3 shadow-xl flex items-center gap-3 animate-bounce z-10">
+                                        <svg className="w-6 h-6 text-green-500 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                            <polyline points="22 4 12 14.01 9 11.01" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                        </svg>
+                                        <div className="text-left">
+                                            <p className="font-bold text-gray-800 text-sm">{t.recorded}</p>
+                                            <p className="text-xs text-gray-600">{t.area}: 0.47 ha • 4 {t.points}</p>
                                         </div>
                                     </div>
                                 )}
