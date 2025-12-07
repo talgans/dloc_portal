@@ -272,47 +272,46 @@
 
             return (
                 <div className="w-full max-w-4xl mx-auto p-3 sm:p-6 bg-gradient-to-br from-green-50 to-blue-50 rounded-lg shadow-lg">
-                    <div className="text-center mb-4 sm:mb-6">
-                        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2">{t.title}</h2>
+                    <div className="text-center mb-1 sm:mb-2">
+                        <h2 className="text-xl sm:text-2xl font-bold text-gray-800 mb-1">{t.title}</h2>
                         <p className="text-sm sm:text-base text-gray-600">{t.subtitle}</p>
-                        
-                        <div className="flex justify-center mt-3 sm:mt-4">
-                            <select
-                                value={language}
-                                onChange={(e) => setLanguage(e.target.value)}
-                                className="px-4 py-2 text-sm rounded-lg font-medium bg-white border-2 border-blue-500 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
-                            >
-                                {Object.keys(translations).map(lang => (
-                                    <option key={lang} value={lang}>
-                                        {lang.charAt(0).toUpperCase() + lang.slice(1)}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
                     </div>
 
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
                         <div className="lg:col-span-2 bg-white rounded-lg p-3 sm:p-4 shadow">
-                            <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 justify-center flex-wrap">
-                                <button
-                                    onClick={startAnimation}
-                                    disabled={isAnimating}
-                                    className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                            <div className="flex gap-2 sm:gap-3 mb-3 sm:mb-4 justify-between items-center flex-wrap">
+                                <div className="flex gap-2 sm:gap-3">
+                                    <button
+                                        onClick={startAnimation}
+                                        disabled={isAnimating}
+                                        className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors font-medium"
+                                    >
+                                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
+                                            <polygon points="5 3 19 12 5 21 5 3"/>
+                                        </svg>
+                                        {isAnimating ? t.running : t.start}
+                                    </button>
+                                    <button
+                                        onClick={resetAnimation}
+                                        className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
+                                    >
+                                        <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                        </svg>
+                                        {t.reset}
+                                    </button>
+                                </div>
+                                <select
+                                    value={language}
+                                    onChange={(e) => setLanguage(e.target.value)}
+                                    className="px-4 py-2 text-sm rounded-lg font-medium bg-white border-2 border-blue-500 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                                 >
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="currentColor" viewBox="0 0 24 24">
-                                        <polygon points="5 3 19 12 5 21 5 3"/>
-                                    </svg>
-                                    {isAnimating ? t.running : t.start}
-                                </button>
-                                <button
-                                    onClick={resetAnimation}
-                                    className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-medium"
-                                >
-                                    <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-                                    </svg>
-                                    {t.reset}
-                                </button>
+                                    {Object.keys(translations).map(lang => (
+                                        <option key={lang} value={lang}>
+                                            {lang.charAt(0).toUpperCase() + lang.slice(1)}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
                             <div className="relative w-full h-64 sm:h-80 md:h-96 bg-gradient-to-br from-green-100 to-green-200 rounded border-2 border-green-300 overflow-hidden">
                                 {/* SVG container with proper viewBox for scaling */}
