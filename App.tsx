@@ -55,7 +55,7 @@ const App: React.FC = () => {
         {/* Hero Section */}
         <div className="flex flex-col items-center justify-center pt-6 pb-16 px-6 text-center">
           <img
-            src="/cosmopolitan-seal.png"
+            src={`${import.meta.env.BASE_URL}cosmopolitan-seal.png`}
             alt="Cosmopolitan University Seal"
             className="hero-graphic float-anim"
           />
